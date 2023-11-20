@@ -12,7 +12,11 @@ endif()
 
 if( CATKIN_DEVEL_PREFIX OR catkin_FOUND OR CATKIN_BUILD_BINARY_PACKAGE)
 
-    find_package(catkin REQUIRED COMPONENTS std_msgs  message_generation  )
+    if(WIN32)
+      find_package(catkin REQUIRED COMPONENTS std_msgs gencpp )
+    else()
+      find_package(catkin REQUIRED COMPONENTS std_msgs  message_generation  )
+    endif()
 
     add_message_files( FILES
       DataPoint.msg
@@ -21,13 +25,17 @@ if( CATKIN_DEVEL_PREFIX OR catkin_FOUND OR CATKIN_BUILD_BINARY_PACKAGE)
       StatisticsNames.msg
       StatisticsValues.msg
     )
-    
+
     generate_messages(
       DEPENDENCIES
       std_msgs
     )
-    
-    catkin_package( CATKIN_DEPENDS std_msgs  message_generation )
+
+    if(WIN32)
+      catkin_package( CATKIN_DEPENDS std_msgs  message_generation )
+    else()
+      catkin_package( CATKIN_DEPENDS std_msgs )
+    endif()
 
 else()
     find_package(ament_cmake REQUIRED)
@@ -48,5 +56,3 @@ else()
     ament_export_dependencies(std_msgs)
     ament_package()
 endif()
-
-
